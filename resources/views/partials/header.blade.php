@@ -61,7 +61,10 @@
                     <div class="avatar avatar-md"><img class="avatar-img" src="" alt="user@email.com"></div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="#">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item">Logout</button>
+                    </form>
                 </div>
             </li>
         </ul>

@@ -3,94 +3,84 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\JournalRequest;
+use App\Models\Journal;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
-/**
- * TEMPORARY STUB — for frontend development only.
- * Replace with the real controller once the backend teammate's
- * Model/Controller/migration are merged in. View files and route
- * names are already final and won't need to change.
- */
 class JournalController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        // Fake paginator-like object so $journals->links() and
-        // $journals->count() don't break the real index view.
-        $journals = collect([
-            (object) [
-                'id' => 1,
-                'cover' => null,
-                'title' => 'Sample Journal Title One',
-                'author' => 'Jane Doe',
-                'publication_date' => \Carbon\Carbon::parse('2026-05-10'),
-                'doi_or_link' => 'https://doi.org/10.1000/sample1',
-                'status' => 'pending',
-            ],
-            (object) [
-                'id' => 2,
-                'cover' => null,
-                'title' => 'Sample Journal Title Two',
-                'author' => 'John Smith',
-                'publication_date' => \Carbon\Carbon::parse('2026-03-22'),
-                'doi_or_link' => 'https://doi.org/10.1000/sample2',
-                'status' => 'published',
-            ],
-            (object) [
-                'id' => 3,
-                'cover' => null,
-                'title' => 'Sample Journal Title Three',
-                'author' => 'Alex Lee',
-                'publication_date' => \Carbon\Carbon::parse('2025-11-01'),
-                'doi_or_link' => null,
-                'status' => 'archived',
-            ],
-        ]);
+        $journals = Journal::orderBy('nama')->paginate(10);
 
-        return view('admin.journals.index', ['journals' => $journals]);
+        return view('admin.journals.index', compact('journals'));
     }
 
-    public function create()
+    public function create(): View
     {
         return view('admin.journals.create');
     }
 
-    public function store(Request $request)
+    public function store(JournalRequest $request): RedirectResponse
     {
-        return redirect()->route('admin.journals.index')
-            ->with('success', '(Stub) Journal would be added here.');
+        $data = $request->validated();
+
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['nama']);
+        }
+
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('journals', 'public');
+        }
+
+        try {
+            Journal::create($data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->withInput()->withErrors(['slug' => 'Slug sudah terpakai. Gunakan slug lain.']);
+        }
+
+        return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Journal $journal): View
     {
-        $journal = (object) [
-            'id' => $id,
-            'cover' => null,
-            'title' => 'Sample Journal Title One',
-            'author' => 'Jane Doe',
-            'publication_date' => \Carbon\Carbon::parse('2026-05-10'),
-            'publication_file' => null,
-            'doi_or_link' => 'https://doi.org/10.1000/sample1',
-            'status' => 'pending',
-        ];
-
         return view('admin.journals.edit', compact('journal'));
     }
 
-    public function update(Request $request, $id)
+    public function update(JournalRequest $request, Journal $journal): RedirectResponse
     {
-        return redirect()->route('admin.journals.index')
-            ->with('success', '(Stub) Journal would be updated here.');
+        $data = $request->validated();
+
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['nama']);
+        }
+
+        if ($request->hasFile('cover')) {
+            if ($journal->cover) {
+                Storage::disk('public')->delete($journal->cover);
+            }
+            $data['cover'] = $request->file('cover')->store('journals', 'public');
+        }
+
+        try {
+            $journal->update($data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->withInput()->withErrors(['slug' => 'Slug sudah terpakai. Gunakan slug lain.']);
+        }
+
+        return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Journal $journal): RedirectResponse
     {
-        return redirect()->route('admin.journals.index')
-            ->with('success', '(Stub) Journal would be deleted here.');
-    }
+        if ($journal->cover) {
+            Storage::disk('public')->delete($journal->cover);
+        }
+        $journal->delete();
 
-    public function show($id)
-    {
-        //
+        return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
 }

@@ -1,0 +1,7 @@
+# Taste
+- Communicates in Indonesian (Bahasa Indonesia); expects responses, explanations, and summaries in Indonesian. Confidence: 0.9
+- When a task is finished, expects a completion report plus a summary of the code/files that were created or changed. Confidence: 0.9
+- Staged workflow: wants the agent to first explore/understand the project thoroughly, report back a clear explanation of what it learned, and then wait — tasks are assigned only after the user reviews that understanding. Work proceeds phase-by-phase and the user explicitly authorizes moving to the next phase (e.g., "lanjut ke task fase 1", "lanjut fase 2") only after the current phase is finished and reported. Don't jump ahead to implementation. Confidence: 0.95
+- Tooling minimalism: questions whether a heavier tool is necessary (e.g., asked "apa kamu perlu menggunakan powershell?" when a plain `cmd`/`del` would do); prefers the simplest available tool for the job rather than reaching for PowerShell or other heavier options. Confidence: 0.7
+- Wants the agent to ask for confirmation before running shell/cmd commands ("jika kamu butuh menggunakan cmd cukup minta konfirmasi saja"); don't run them without prior notice. Confidence: 0.8
+- Conservative toward system/global changes: prefers to NOT modify system-level environment variables (e.g., a Machine-scope `APP_LOCALE`) or introduce code deviations from documented instructions — when blocked by an environment conflict, accepted leaving the feature unapplied rather than altering the environment or hacking config. Confidence: 0.9

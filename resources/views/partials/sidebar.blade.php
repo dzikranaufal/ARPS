@@ -20,27 +20,20 @@
             </a>
         </li>
 
-        {{-- Membership group — links are placeholders (href="#") until those
+        {{-- Members group — links are placeholders (href="#") until those
              views/routes exist. Only Journals below is wired to a real route. --}}
-        <li class="nav-group {{ request()->routeIs('admin.membership.*') ? 'show' : '' }}">
+        <li class="nav-group {{ request()->routeIs('admin.members.*') ? 'show' : '' }}">
             <a class="nav-link nav-group-toggle" href="#">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                     <path fill="var(--ci-primary-color, currentcolor)" d="M494 198.671a40.54 40.54 0 0 0-32.174-27.592l-115.909-18.837-53.732-104.414a40.7 40.7 0 0 0-72.37 0l-53.732 104.414-115.907 18.837a40.7 40.7 0 0 0-22.364 68.827l82.7 83.368-17.9 116.055a40.672 40.672 0 0 0 58.548 42.538L256 428.977l104.843 52.89a40.69 40.69 0 0 0 58.548-42.538l-17.9-116.055 82.7-83.368A40.54 40.54 0 0 0 494 198.671m-32.53 18.7L367.4 312.2l20.364 132.01a8.671 8.671 0 0 1-12.509 9.088L256 393.136 136.744 453.3a8.671 8.671 0 0 1-12.509-9.088L144.6 312.2l-94.069-94.83a8.7 8.7 0 0 1 4.778-14.706l131.841-21.426 61.119-118.767a8.694 8.694 0 0 1 15.462 0l61.119 118.767 131.841 21.426a8.7 8.7 0 0 1 4.778 14.706Z" class="ci-primary" />
                 </svg>
-                Membership
+                Members
             </a>
             <ul class="nav-group-items compact">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}" href="{{ route('admin.members.index') }}">
                         <span class="nav-icon"><span class="nav-icon-bullet"></span></span>
                         All Members
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="nav-icon"><span class="nav-icon-bullet"></span></span>
-                        Requests
-                        <span class="badge badge-sm bg-warning ms-auto">3</span>
                     </a>
                 </li>
             </ul>
@@ -48,9 +41,24 @@
 
         <li class="nav-title">Content Management</li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="cil-calendar nav-icon"></i>
-                Events
+            <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}"
+                href="{{ route('admin.categories.index') }}">
+                <i class="cil-tags nav-icon"></i>
+                Categories
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.programs.*') ? 'active' : '' }}"
+                href="{{ route('admin.programs.index') }}">
+                <i class="cil-puzzle nav-icon"></i>
+                Programs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.technology-innovations.*') ? 'active' : '' }}"
+                href="{{ route('admin.technology-innovations.index') }}">
+                <i class="cil-lightbulb nav-icon"></i>
+                Technology Innovation
             </a>
         </li>
         <li class="nav-item">
@@ -61,13 +69,21 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}"
+                href="{{ route('admin.events.index') }}">
+                <i class="cil-calendar nav-icon"></i>
+                Events
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.news.*') ? 'active' : '' }}"
+                href="{{ route('admin.news.index') }}">
                 <i class="cil-bullhorn nav-icon"></i>
                 News
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->routeIs('admin.publications.*') ? 'active' : '' }}" href="{{ route('admin.publications.index') }}">
                 <i class="cil-file nav-icon"></i>
                 Publications
             </a>
@@ -88,32 +104,34 @@
                 Structure
             </a>
         </li>
-
-        <li class="nav-title">Users</li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->routeIs('admin.heroes.*') ? 'active' : '' }}"
+            href="{{ route('admin.heroes.index') }}">
+                <i class="cil-star nav-icon"></i>
+                Heroes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.focus-areas.*') ? 'active' : '' }}"
+            href="{{ route('admin.focus-areas.index') }}">
+                <i class="cil-layers nav-icon"></i>
+                Focus Areas
+            </a>
+        </li>
+
+        <li class="nav-title">Users (Super Admin)</li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.admin-users.*') ? 'active' : '' }}" href="{{ route('admin.admin-users.index') }}">
                 <i class="cil-user-follow nav-icon"></i>
                 Admin Users
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="cil-lock-locked nav-icon"></i>
-                Role &amp; Permissions
-            </a>
-        </li>
 
-        <li class="nav-title">Settings</li>
+        <li class="nav-title">Settings (Super Admin)</li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.edit') }}">
                 <i class="cil-settings nav-icon"></i>
                 General Settings
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="cil-share nav-icon"></i>
-                Social Media
             </a>
         </li>
 

@@ -2,6 +2,7 @@
 
 @section('title', 'Journals')
 
+@section('meta_description', 'Katalog jurnal ARPS — referensi eksternal dan jaringan publikasi mitra.')
 @section('content')
 
 <div class="container my-5">
@@ -11,74 +12,41 @@
         <p class="text-body-secondary">Browse journals published under the ARPS network.</p>
     </div>
 
-    {{-- ================================================
-             STATIC SAMPLE JOURNALS — for layout purposes only.
-             Backend dev: replace with @foreach ($journals as $journal) ...
-             Each card should link to journal.home using $journal->slug.
-        ================================================= --}}
-
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
 
-        <div class="col">
-            <a href="{{ route('journal.home', ['slug' => 'ai']) }}" class="text-decoration-none text-body">
-                <div class="card h-100 shadow-sm journal-card">
-                    <div class="bg-dark d-flex align-items-center justify-content-center" style="aspect-ratio: 3/4;">
-                        <span class="text-white-50 small text-center px-2">[ Innovation in Engineering cover ]</span>
+        @forelse ($journals as $journal)
+            <div class="col">
+                <a href="{{ $journal->link_eksternal }}" target="_blank" rel="noopener"
+                    class="text-decoration-none text-body">
+                    <div class="card h-100 shadow-sm journal-card">
+                        @if($journal->cover)
+                            <img src="{{ asset('storage/'.$journal->cover) }}" alt="{{ $journal->nama }}" class="card-img-top" style="aspect-ratio: 3/4; object-fit: cover;">
+                        @else
+                            <div class="bg-dark d-flex align-items-center justify-content-center" style="aspect-ratio: 3/4;">
+                                <span class="text-white-50 small text-center px-2">[ cover ]</span>
+                            </div>
+                        @endif
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 small fw-bold">{{ $journal->nama }}</h6>
+                            <p class="card-text text-body-secondary small mb-0">E-ISSN {{ $journal->e_issn }}</p>
+                            @if ($journal->deskripsi)
+                                <p class="card-text text-body-secondary small mb-0 mt-1">{{ \Illuminate\Support\Str::limit(strip_tags($journal->deskripsi),80) }}</p>
+                            @endif
+                        </div>
                     </div>
-                    <div class="card-body p-2">
-                        <h6 class="card-title mb-1 small fw-bold">Innovation in Engineering</h6>
-                        <p class="card-text text-body-secondary small mb-0">E-ISSN 3047-5473</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col">
-            <a href="{{ route('journal.home', ['slug' => 'cs']) }}" class="text-decoration-none text-body">
-                <div class="card h-100 shadow-sm journal-card">
-                    <div class="bg-secondary d-flex align-items-center justify-content-center"
-                        style="aspect-ratio: 3/4;">
-                        <span class="text-white-50 small text-center px-2">[ Computer Science cover ]</span>
-                    </div>
-                    <div class="card-body p-2">
-                        <h6 class="card-title mb-1 small fw-bold">Computer Science &amp; Applications</h6>
-                        <p class="card-text text-body-secondary small mb-0">E-ISSN 3047-5481</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col">
-            <a href="{{ route('journal.home', ['slug' => 'cvi']) }}" class="text-decoration-none text-body">
-                <div class="card h-100 shadow-sm journal-card">
-                    <div class="bg-dark-subtle d-flex align-items-center justify-content-center"
-                        style="aspect-ratio: 3/4;">
-                        <span class="text-body-secondary small text-center px-2">[ Cybersecurity cover ]</span>
-                    </div>
-                    <div class="card-body p-2">
-                        <h6 class="card-title mb-1 small fw-bold">Cybersecurity &amp; Vulnerability</h6>
-                        <p class="card-text text-body-secondary small mb-0">E-ISSN 3047-5499</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col">
-            <a href="{{ route('journal.home', ['slug' => 'edu']) }}" class="text-decoration-none text-body">
-                <div class="card h-100 shadow-sm journal-card">
-                    <div class="bg-secondary d-flex align-items-center justify-content-center"
-                        style="aspect-ratio: 3/4;">
-                        <span class="text-white-50 small text-center px-2">[ Sustainable Education cover ]</span>
-                    </div>
-                    <div class="card-body p-2">
-                        <h6 class="card-title mb-1 small fw-bold">AI for Sustainable Education</h6>
-                        <p class="card-text text-body-secondary small mb-0">E-ISSN 3047-5502</p>
-                    </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        @empty
+            <div class="col-12">
+                <p class="text-body-secondary">Belum ada jurnal.</p>
+            </div>
+        @endforelse
 
     </div>
+
+    @if(method_exists($journals, 'links'))
+        <div class="mt-4">{{ $journals->links() }}</div>
+    @endif
 
 </div>
 

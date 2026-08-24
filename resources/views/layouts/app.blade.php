@@ -4,8 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="ARPS — Academics, Researchers, and Practitioners Society">
     <title>@yield('title', 'ARPS') | Academics, Researchers, and Practitioners Society</title>
+    <meta name="description" content="@yield('meta_description', 'ARPS — Academics, Researchers, and Practitioners Society')">
+    <meta property="og:title" content="@yield('title', 'ARPS')">
+    <meta property="og:description" content="@yield('meta_description', 'ARPS — Academics, Researchers, and Practitioners Society')">
+    <meta property="og:type" content="website">
+    @yield('meta')
 
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon/favicon-32x32.png') }}">
 

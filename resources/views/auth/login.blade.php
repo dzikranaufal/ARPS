@@ -2,6 +2,7 @@
 
 @section('title', 'Login')
 
+@section('meta_description', 'Masuk akun ARPS — login member dan admin dengan keamanan berlapis.')
 @section('content')
 
 <div class="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -19,23 +20,36 @@
                             <h1>Login</h1>
                             <p class="text-body-secondary">Sign in to your ARPS account</p>
 
-                            {{-- Static form only — no action, no backend wiring yet.
-                                     Backend dev will add action="{{ route('login.attempt') }}"
-                            method="POST", @csrf, and validation. --}}
-                            <form>
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+
+                                @error('email')
+                                    <div class="alert alert-danger py-2 small">{{ $message }}</div>
+                                @enderror
+
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">
                                         <i class="cil-user"></i>
                                     </span>
-                                    <input type="text" class="form-control" id="email" name="email"
-                                        placeholder="Email or Username" autocomplete="username">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
+                                        placeholder="Email" value="{{ old('email') }}" autocomplete="username" required autofocus>
+                                    @error('email')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="input-group mb-4">
                                     <span class="input-group-text">
                                         <i class="cil-lock-locked"></i>
                                     </span>
-                                    <input type="password" class="form-control" id="password" name="password"
-                                        placeholder="Password" autocomplete="current-password">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password"
+                                        placeholder="Password" autocomplete="current-password" required>
+                                    @error('password')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1">
+                                    <label class="form-check-label" for="remember">Remember me</label>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
@@ -48,6 +62,11 @@
                                     </div>
                                 </div>
                             </form>
+
+                            <div class="mt-3 text-center small">
+                                Belum punya akun?
+                                <a href="{{ route('register') }}" class="fw-bold">Daftar</a>
+                            </div>
 
                         </div>
                     </div>
